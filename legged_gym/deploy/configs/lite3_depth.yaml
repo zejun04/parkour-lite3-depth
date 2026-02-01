@@ -1,0 +1,47 @@
+# 模型与路径配置
+base_jit_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3-distil/traced/lite3-distil-9500-base_jit.pt"
+vision_weight_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3-distil/traced/lite3-distil-9500-vision_weight.pt"
+xml_path: "{LEGGED_GYM_ROOT_DIR}/resources/robots/lite3_mjcf/mjcf/lite3_scene.xml"
+
+# 仿真参数
+simulation_duration: 60.0
+simulation_dt: 0.002           # 500Hz 物理引擎
+control_decimation: 10         # 50Hz 策略更新 (0.002 * 10 = 0.02s)
+
+# 机器人初始状态
+initial_height: 0.42           # 机器人初始高度（米）
+
+# 可视化选项
+visualize_depth: true          # 是否显示深度图窗口
+
+# 深度相机配置 (需与训练时的预处理一致)
+depth_width: 87
+depth_height: 58
+depth_rate_hz: 10
+
+# Lite3 PD 控制参数
+kps: [30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0, 30.0]
+kds: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+
+default_angles: [0.0, -1.0, 1.8, 0.0, -1.0, 1.8, 
+                 0.0, -1.0, 1.8, 0.0, -1.0, 1.8]
+# 关节顺序(参考mjcf/Lite3.xml)：
+# FL_HipX   FL_HipY FL_Knee 
+# FR_HipX   FR_HipY FR_Knee 
+# HL_HipX   HL_HipY HL_Knee 
+# HR_HipX   HR_HipY HR_Knee 
+
+# 观测缩放系数
+ang_vel_scale: 0.25
+dof_pos_scale: 1.0
+dof_vel_scale: 0.05
+action_scale: 0.25
+cmd_scale: [2.0, 2.0, 0.25]
+
+# 维度定义
+num_actions: 12
+num_obs: 53 # 3(ang_vel) + 3(grav) + 3(cmd) + 12(pos) + 12(vel) + 12(prev_action)
+
+# 初始命令 [vx, vy, yaw_rate]
+cmd_init: [0.0, 0.0, 0.0]

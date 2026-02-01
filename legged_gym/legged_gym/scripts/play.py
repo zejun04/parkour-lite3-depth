@@ -47,12 +47,24 @@ import matplotlib.pyplot as plt
 from time import time, sleep
 from legged_gym.utils import webviewer
 
-def get_load_path(root, load_run=-1, checkpoint=-1, model_name_include="model"):
+def get_load_path(root, load_run=-1, checkpoint=-1, model_name_include="model", is_traced=False):
     if checkpoint==-1:
-        models = [file for file in os.listdir(root) if model_name_include in file]
-        models.sort(key=lambda m: '{0:0>15}'.format(m))
-        model = models[-1]
-        checkpoint = model.split("_")[-1].split(".")[0]
+        if is_traced:
+            # 在 traced 模式下，优先查找 _jit.pt 结尾的文件
+            models = [file for file in os.listdir(root) if file.endswith(".pt")]
+            # 优先选择 _jit.pt 文件
+            jit_models = [m for m in models if m.endswith("_jit.pt")]
+            if jit_models:
+                models = jit_models
+            models.sort()
+            model = models[-1]
+            # 从文件名中提取 checkpoint（如 lite3-distil-8500-base_jit.pt -> 8500）
+            checkpoint = model.split("-")[-1].split(".")[0].split("-")[0]
+        else:
+            models = [file for file in os.listdir(root) if model_name_include in file]
+            models.sort(key=lambda m: '{0:0>15}'.format(m))
+            model = models[-1]
+            checkpoint = model.split("_")[-1].split(".")[0]
     return model, checkpoint
 
 def play(args):
@@ -68,7 +80,7 @@ def play(args):
         env_cfg.domain_rand.action_delay_view = 0
     env_cfg.env.num_envs = 16 if not args.save else 64
     env_cfg.env.episode_length_s = 60
-    env_cfg.commands.resampling_time = 60
+    env_cfg.commands.resampling_time = 10
     env_cfg.terrain.num_rows = 5
     env_cfg.terrain.num_cols = 5
     env_cfg.terrain.height = [0.02, 0.02]
@@ -97,7 +109,7 @@ def play(args):
     env_cfg.terrain.curriculum = False
     env_cfg.terrain.max_difficulty = True
     
-    env_cfg.depth.angle = [0, 1]
+    env_cfg.depth.angle = [2, 5]
     env_cfg.noise.add_noise = True
     env_cfg.domain_rand.randomize_friction = True
     env_cfg.domain_rand.push_robots = False
@@ -120,7 +132,7 @@ def play(args):
     
     if args.use_jit:
         path = os.path.join(log_pth, "traced")
-        model, checkpoint = get_load_path(root=path, checkpoint=args.checkpoint)
+        model, checkpoint = get_load_path(root=path, checkpoint=args.checkpoint, is_traced=True)
         path = os.path.join(path, model)
         print("Loading jit for policy: ", path)
         policy_jit = torch.jit.load(path, map_location=env.device)
@@ -155,7 +167,8 @@ def play(args):
                     depth_latent = depth_latent_and_yaw[:, :-2]
                     yaw = depth_latent_and_yaw[:, -2:]
                     #print("raw yaw:", depth_latent_and_yaw[:1, -2:].float())
-                obs[:, 6:8] = 1.5*yaw                
+                obs[:, 6:8] = 1.5*yaw       
+                        
                 # print("double 1.5 times:", obs[:1, 6:8].float())                
                     
             else:

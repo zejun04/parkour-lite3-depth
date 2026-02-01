@@ -1,0 +1,45 @@
+<mujoco model="lite3 scene">
+    <include file="Lite3.xml"/>
+    <statistic center="0 0 0.1" extent="0.8"/>
+
+    <!-- 在机器人面前添加方块障碍物 -->
+    <worldbody>
+        <geom name="gap-1" type="box" size="0.5 0.5 0.4" pos="1.0 0 0.0" rgba="0.8 0.3 0.3 1"/>
+        <geom name="gap-2" type="box" size="0.5 0.5 0.7" pos="2.0 0 0.0" rgba="0.8 0.3 0.3 1"/>
+        <geom name="gap-3" type="box" size="0.8 0.5 0.4" pos="3.3 0 0.0" rgba="0.8 0.3 0.3 1"/>
+    </worldbody>
+
+    <worldbody>
+        <geom name="stair-1" type="box" size="0.10 0.6 0.45" pos="4.1 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-2" type="box" size="0.10 0.6 0.60" pos="4.3 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-3" type="box" size="0.10 0.6 0.75" pos="4.5 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-4" type="box" size="0.10 0.6 0.90" pos="4.7 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-5" type="box" size="0.10 0.6 1.05" pos="4.9 0 0.1" rgba="0.8 0.3 0.3 1"/>
+
+        <geom name="stair-plane" type="box" size="0.50 0.6 1.05" pos="5.5 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-6" type="box" size="0.10 0.6 0.90" pos="6.1 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-7" type="box" size="0.10 0.6 0.75" pos="6.3 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-8" type="box" size="0.10 0.6 0.60" pos="6.5 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-9" type="box" size="0.10 0.6 0.45" pos="6.7 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-10" type="box" size="0.10 0.6 0.30" pos="6.9 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        <geom name="stair-11" type="box" size="0.10 0.6 0.15" pos="7.1 0 0.1" rgba="0.8 0.3 0.3 1"/>
+        
+
+
+    </worldbody>
+
+    <worldbody>
+        <geom name="obstacle—b" type="box" size="0.3 0.3 0.18" pos="-1.0 0 0.1" rgba="0.0 0.0 0.3 1"/>
+    </worldbody>
+
+    <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="-130" elevation="-20"/>
+    </visual>
+    <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+    </asset>
+</mujoco>
