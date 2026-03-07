@@ -150,14 +150,14 @@
       <site name="TORSO_site" pos="0 0 0" quat="1 0 0 0" />
       <!-- 深度相机：与训练配置一致 -->
       <!-- 位置: [0.25228, -0.0005, 0.07410] (x:forward, y:left, z:up) -->
-      <!-- 朝向: yaw=0, pitch=-5°, roll=0 (ZYX Euler in Isaac Gym) -->
-      <!-- MuJoCo相机坐标: x右/y上/z后，设置为朝+X并俯视5° -->
+      <!-- 朝向: yaw=0, pitch=-10°, roll=0 (ZYX Euler in Isaac Gym) -->
+      <!-- MuJoCo相机坐标: x右/y上/z后，设置为朝+X并俯视10° -->
       <geom name="depth_camera_geom" type="box" size="0.01 0.02 0.01"
             pos="0.25228 -0.0005 0.07410" rgba="0.1 0.3 0.8 1"
             contype="0" conaffinity="0" group="2" />
-      <camera name="depth_camera" mode="fixed" fovy="53.46"
+      <camera name="depth_camera" mode="fixed" fovy="56"
               pos="0.25228 -0.0005 0.07410"
-              xyaxes="0 -1 0 0.0871557 0 0.9961947" />
+              xyaxes="0 -1 0 0.173648 0 0.984807" />     
       <camera name="front_camera" mode="track" fovy="90.0" quat="4.329780281177467e-17 4.329780281177466e-17 0.7071067811865475 0.7071067811865476" pos="0.0 2.0 0.5" />
       <camera name="side_camera" mode="track" fovy="90.0" quat="-0.5 -0.4999999999999999 0.5 0.5000000000000001" pos="-2.0 0.0 0.5" />
     </body>
