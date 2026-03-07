@@ -310,10 +310,7 @@ class Lite3VisionDeploy:
                     step_start = time.time()
 
                     if counter % self.cfg["control_decimation"] == 0:
-                        # 每秒打印一次状态
-                        if counter % 500 == 0:
-                            print(f"\nStep {counter}: Base height = {self.d.qpos[2]:.3f}m, "
-                                  f"Base vel = [{self.d.qvel[0]:.3f}, {self.d.qvel[1]:.3f}]")
+                        
 
                         # --- 传感器数据获取 ---
                         qj = self.d.qpos[7:]
@@ -333,6 +330,8 @@ class Lite3VisionDeploy:
                         self.next_target_yaw = 0.0
                         self.delta_yaw = self.target_yaw - self.yaw
                         self.next_delta_yaw = self.next_target_yaw - self.yaw
+                        # delta_yaw_ok: 偏航角误差在阈值内时为 True（与 IsaacGym 训练一致）
+                        self.delta_yaw_ok = abs(self.delta_yaw) < 0.5
                         # --- 指令 ---
                         cmd_x = 0.3
                         
@@ -444,16 +443,17 @@ class Lite3VisionDeploy:
                         depth_feature, depth_timestamp, depth_latency, yaw = self.depth_processor.get_depth_feature(sim_time)
 
                         # 关键：将 depth_encoder 输出的 yaw 乘以 1.5 后更新到 obs 的 6:8 位置
-                        # 这与 play.py 中的处理方式一致
-                        if yaw is not None:
-                            obs_tensor[:, 6:8] = 1.5 * yaw
+                        # 仅在 delta_yaw_ok=True 时使用深度编码器的预测（与训练一致）
+                        if yaw is not None :
+                            if self.delta_yaw_ok is True:    
+                                obs_tensor[:, 6:8] = 1.5 * yaw
 
-                        if self.debug_obs and counter % 500 == 0:
-                            joint_err = np.linalg.norm(self.d.qpos[7:] - self.default_angles_config)
-                            print(f"  obs[:10] = {np.round(current_obs[:10], 4)}")
-                            if depth_latency is not None:
-                                print(f"  depth_latency = {depth_latency:.3f}s")
-                            print(f"  joint_err_norm = {joint_err:.4f}")
+                        # 每秒打印一次状态
+                        if counter % 100 == 0:
+                            print(f"\nStep {counter}: Base height = {self.d.qpos[2]:.3f}m, "
+                                  f"Base vel = [{self.d.qvel[0]:.3f}, {self.d.qvel[1]:.3f}]")
+                            print(f"  delta_yaw_ok: {self.delta_yaw_ok}, delta_yaw: {self.delta_yaw:.4f}")
+                       
 
                         if self.policy_enabled:
                             # 使用 base policy 生成动作

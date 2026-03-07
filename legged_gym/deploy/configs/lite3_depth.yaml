@@ -1,8 +1,8 @@
 # 模型与路径配置
-base_jit_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3/traced/lite3-10000-base_jit.pt"
-vision_weight_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3/traced/lite3-10000-vision_weight.pt"
-# base_jit_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3-distil/traced/lite3-distil-9500-base_jit.pt"
-# vision_weight_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3-distil/traced/lite3-distil-9500-vision_weight.pt"
+# base_jit_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3/traced/lite3-10000-base_jit.pt"
+# vision_weight_path: "{LEGGED_GYM_ROOT_DIR}/logs/parkour_new/lite3/traced/lite3-10000-vision_weight.pt"
+base_jit_path: "{LEGGED_GYM_ROOT_DIR}/deploy/model/lite3/2-1-1w-step/lite3-distil-9500-base_jit.pt"
+vision_weight_path: "{LEGGED_GYM_ROOT_DIR}/deploy/model/lite3/2-1-1w-step/lite3-distil-9500-vision_weight.pt"
 xml_path: "{LEGGED_GYM_ROOT_DIR}/resources/robots/lite3_mjcf/mjcf/lite3_scene.xml"
 
 # 仿真参数

@@ -98,12 +98,12 @@ def play(args):
                                     "platform": 0.,
                                     "large stairs up": 0.,
                                     "large stairs down": 0.,
-                                    "parkour": 0.2,
-                                    "parkour_hurdle": 0.2,
-                                    "parkour_flat": 0.,
-                                    "parkour_step": 0.2,
-                                    "parkour_gap": 0.2, 
-                                    "demo": 0.2}
+                                    "parkour": 0.0,
+                                    "parkour_hurdle": 0.0,
+                                    "parkour_flat": 0.99,
+                                    "parkour_step": 0.0,
+                                    "parkour_gap": 0.0, 
+                                    "demo": 0.01}
     
     env_cfg.terrain.terrain_proportions = list(env_cfg.terrain.terrain_dict.values())
     env_cfg.terrain.curriculum = False
@@ -166,8 +166,11 @@ def play(args):
                     depth_latent_and_yaw = depth_encoder(infos["depth"], obs_student)
                     depth_latent = depth_latent_and_yaw[:, :-2]
                     yaw = depth_latent_and_yaw[:, -2:]
-                    #print("raw yaw:", depth_latent_and_yaw[:1, -2:].float())
-                obs[:, 6:8] = 1.5*yaw       
+                    # 与训练保持一致：仅在 delta_yaw_ok=True 时替换
+                    if "delta_yaw_ok" in infos:
+                        obs[infos["delta_yaw_ok"], 6:8] = 1.5*yaw.detach()[infos["delta_yaw_ok"]]
+                    else:
+                        obs[:, 6:8] = 1.5*yaw       
                         
                 # print("double 1.5 times:", obs[:1, 6:8].float())                
                     
@@ -187,7 +190,9 @@ def play(args):
                         wait_for_page_load=True)
         print("time:", env.episode_length_buf[env.lookat_id].item() / 50, 
               "cmd vx", env.commands[env.lookat_id, 0].item(),
-              "actual vx", env.base_lin_vel[env.lookat_id, 0].item(), )
+              "actual vx", env.base_lin_vel[env.lookat_id, 0].item(),
+              "delta_yaw_ok:", infos["delta_yaw_ok"][env.lookat_id].item() if "delta_yaw_ok" in infos else "N/A",
+              "delta_yaw:", env.delta_yaw[env.lookat_id].item())
         
         id = env.lookat_id
         
